@@ -12,6 +12,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var passport = require('passport');
 var Twit = require('twit');
+var cloudinary = require('cloudinary');
 
 var flash = require('express-flash');
 var path = require('path');
@@ -33,6 +34,12 @@ mongoose.connection.on('error', function() {
 });
 
 var app = express();
+
+cloudinary.config({ 
+  cloud_name: 'groupdropper', 
+  api_key: '357753245132285', 
+  api_secret: 'a676b67565c6767a6767d6767f676fe1' 
+});
 
 /**
  * Express configuration.
@@ -105,6 +112,25 @@ app.post('/account/password', passportConf.isAuthenticated, userController.postU
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 
+
+app.get('/', routes.index);
+app.get('/products', routes.products);  
+app.get('/products/:id', routes.product);
+app.put('/products/:id', routes.purchase);
+app.post('/products', routes.create);
+// app.get('/', homeController.index);
+// app.get('/login', userController.getLogin);
+// app.post('/login', userController.postLogin);
+// app.get('/logout', userController.logout);
+// app.get('/signup', userController.getSignup);
+// app.post('/signup', userController.postSignup);
+// app.get('/contact', contactController.getContact);
+// app.post('/contact', contactController.postContact);
+// app.get('/account', passportConf.isAuthenticated, userController.getAccount);
+// app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
+// app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
+// app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
+// app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/#/products', failureRedirect: '/login' }));
 app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
